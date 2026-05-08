@@ -1,72 +1,20 @@
-package FloresAmarillas;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class FloresAnimadas extends JPanel {
 
-    class Flor {
-        int x, y;
-        int velocidad;
-
-        public Flor(int x, int y, int velocidad) {
-            this.x = x;
-            this.y = y;
-            this.velocidad = velocidad;
-        }
-
-        public void mover() {
-            y += velocidad;
-
-            // Reinicia arriba cuando sale de la pantalla
-            if (y > getHeight()) {
-                y = -50;
-            }
-        }
-
-        public void dibujar(Graphics g) {
-            // Pétalos amarillos
-            g.setColor(Color.YELLOW);
-
-            g.fillOval(x, y, 20, 20);
-            g.fillOval(x + 20, y, 20, 20);
-            g.fillOval(x - 20, y, 20, 20);
-            g.fillOval(x, y - 20, 20, 20);
-            g.fillOval(x, y + 20, 20, 20);
-
-            // Centro naranja
-            g.setColor(Color.ORANGE);
-            g.fillOval(x, y, 20, 20);
-
-            // Tallo verde
-            g.setColor(Color.GREEN);
-            g.fillRect(x + 8, y + 20, 4, 40);
-        }
-    }
-
-    private final ArrayList<Flor> flores = new ArrayList<>();
-    private final Timer timer;
+    int y = 0;
 
     public FloresAnimadas() {
 
-        Random random = new Random();
+        Timer timer = new Timer(40, e -> {
 
-        // Varias flores
-        for (int i = 0; i < 10; i++) {
-            flores.add(new Flor(
-                    random.nextInt(700),
-                    random.nextInt(500),
-                    2 + random.nextInt(4)
-            ));
-        }
+            y += 5;
 
-        // Animación
-        timer = new Timer(40, e -> {
-            for (Flor flor : flores) {
-                flor.mover();
+            if (y > 600) {
+                y = -100;
             }
+
             repaint();
         });
 
@@ -77,21 +25,33 @@ public class FloresAnimadas extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Fondo celeste
-        setBackground(new Color(135, 206, 235));
+        setBackground(Color.CYAN);
 
-        for (Flor flor : flores) {
-            flor.dibujar(g);
-        }
+        // Tallo
+        g.setColor(Color.GREEN);
+        g.fillRect(390, y + 40, 10, 80);
+
+        // Pétalos
+        g.setColor(Color.YELLOW);
+
+        g.fillOval(370, y + 20, 30, 30);
+        g.fillOval(400, y + 20, 30, 30);
+        g.fillOval(385, y, 30, 30);
+        g.fillOval(385, y + 40, 30, 30);
+
+        // Centro
+        g.setColor(Color.ORANGE);
+        g.fillOval(385, y + 20, 30, 30);
     }
 
     public static void main(String[] args) {
 
-        JFrame ventana = new JFrame("Flores Amarillas Animadas");
+        JFrame ventana = new JFrame("Flores Amarillas");
 
         FloresAnimadas panel = new FloresAnimadas();
 
         ventana.add(panel);
+
         ventana.setSize(800, 600);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);
